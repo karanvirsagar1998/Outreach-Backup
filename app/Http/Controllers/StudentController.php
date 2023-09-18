@@ -2,27 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Models\Student;
+use App\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
         $students = Student::with('companies', 'college')->get();
 
         $studentArr = array();
-        foreach($students as $student) {
-            $student->completeSkills =  $this->processStudentCompleteSkills($student);
+        foreach ($students as $student) {
+            $student->completeSkills = $this->processStudentCompleteSkills($student);
             $studentArr[] = $student;
-
         }
 
         return response()->json([
@@ -31,21 +33,32 @@ class StudentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    private function processStudentCompleteSkills(Student $student): string
     {
-        //
+        $skillsetArr = array();
+        if ($student->skills) {
+            array_push($skillsetArr, $student->skills);
+        }
+
+        if (count($student->skillsets)) {
+            foreach ($student->skillsets as $skills) {
+                array_push($skillsetArr, $skills->skill->name);
+            }
+        }
+
+        if (count($skillsetArr)) {
+            return implode(", ", $skillsetArr);
+        } else {
+            return "";
+        }
+
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -70,15 +83,63 @@ class StudentController extends Controller
 
     }
 
+    private function validateForm($request)
+    {
+
+        $response = response()->json([
+            'status' => true
+        ], 200);
+
+        $validation = array();
+
+        if ($request->get('id') > 0) {
+            $validation = [
+                'email' => 'required|email|unique:student,email,' . $request->get('id')
+            ];
+        } else {
+            $validation = [
+                'email' => 'required|email|unique:student,email'
+            ];
+        }
+        try {
+            //Validated
+            $validateUser = Validator::make($request->all(), $validation);
+            if ($validateUser->fails()) {
+                $response = response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateUser->errors()
+                ], 401);
+            }
+        } catch (Throwable $th) {
+            $response = response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+        return $response;
+
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
+    }
+
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @param Student $student
+     * @return Response
      */
     public function show(Student $student)
     {
-        $student->load('companies', 'skillsets','skillsets.skill', 'college');
+        $student->load('companies', 'skillsets', 'skillsets.skill', 'college');
 
         return response()->json([
             'status' => true,
@@ -90,11 +151,12 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @param Student $student
+     * @return Response
      */
-    public function showSkillset(Student $student){
-        $student->load('skillsets','skillsets.skill');
+    public function showSkillset(Student $student)
+    {
+        $student->load('skillsets', 'skillsets.skill');
 
         return response()->json([
             'status' => true,
@@ -106,8 +168,8 @@ class StudentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @param Student $student
+     * @return Response
      */
     public function edit(Student $student)
     {
@@ -117,9 +179,9 @@ class StudentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Student $student
+     * @return Response
      */
     public function update(Request $request, Student $student)
     {
@@ -144,8 +206,8 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Student  $student
-     * @return \Illuminate\Http\Response
+     * @param Student $student
+     * @return Response
      */
     public function destroy(Student $student)
     {
@@ -169,63 +231,5 @@ class StudentController extends Controller
             'status' => true,
             'message' => "Student Deleted successfully!",
         ], 200);
-    }
-
-    private function validateForm($request) {
-
-        $response =  response()->json([
-            'status' => true
-        ], 200);
-
-        $validation = array();
-
-        if ($request->get('id') > 0) {
-            $validation = [
-                'email' => 'required|email|unique:student,email,'.$request->get('id')
-            ];
-        } else {
-            $validation = [
-                'email' => 'required|email|unique:student,email'
-            ];
-        }
-        try {
-            //Validated
-            $validateUser = Validator::make($request->all(), $validation);
-            if($validateUser->fails()){
-                $response = response()->json([
-                    'status' => false,
-                    'message' => 'validation error',
-                    'errors' => $validateUser->errors()
-                ], 401);
-            }
-        } catch (\Throwable $th) {
-            $response = response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
-        }
-        return $response;
-
-    }
-
-    private function processStudentCompleteSkills(Student $student) {
-        $skillsetArr = array();
-        if ($student->skills) {
-            array_push($skillsetArr, $student->skills);
-        }
-
-        if (count($student->skillsets)) {
-            foreach ($student->skillsets as $skills) {
-                array_push( $skillsetArr , $skills->skill->name);
-
-            }
-        }
-
-        if (count($skillsetArr)) {
-            return implode(", ",$skillsetArr);
-        } else {
-            return "";
-        }
-
     }
 }
