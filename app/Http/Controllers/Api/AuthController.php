@@ -26,7 +26,7 @@ class AuthController extends Controller
     /**
      * Create User
      * @param Request $request
-     * @return User
+     * @return \Illuminate\Http\JsonResponse
      */
     public function createUser(Request $request)
     {
@@ -182,5 +182,10 @@ class AuthController extends Controller
         return response()->json([
             'data' => base64_encode(QrCode::format('svg')->generate($qrCodeUrl))
         ]);
+    }
+
+    public function profile(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(auth()->user());
     }
 }

@@ -35,8 +35,8 @@ Route::get('/clear', function () {
 
 });
 
-Route::post('/signup', ['as' => '', 'uses' => 'Api\AuthController@createUser']);
-Route::post('/signin', ['as' => '', 'uses' => 'Api\AuthController@loginUser']);
+Route::post('/signup',  [AuthController::class, 'createUser']);
+Route::post('/signin', [AuthController::class, 'loginUser']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('company', CompanyController::class);
@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('user', UserController::class);
     Route::apiResource('college', CollegeController::class);
 
+    Route::get('auth/profile', [AuthController::class, 'profile']);
     Route::post('jobs', [JobsController::class, 'store']);
     Route::get('mfa-qrcode', [AuthController::class, 'mfaQrcode']);
     Route::put('jobs/{jobs}', [JobsController::class, 'update']);
