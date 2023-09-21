@@ -31,7 +31,8 @@ class Student extends Model
         'college_id',
         'college_other',
         'video_link',
-        'assessment_results_link'
+        'assessment_results_link',
+        'status'
     ];
 
     /**
