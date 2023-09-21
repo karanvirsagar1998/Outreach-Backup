@@ -13,6 +13,7 @@ trait HasAdvancedFilter
             'order_direction' => request('order', 'desc'),
             'limit' => request('limit', 10),
             's' => request('s', null),
+            'f' => json_decode(request('f', null), true),
         ])
             ->paginate(request('limit', 10));
     }
@@ -26,10 +27,10 @@ trait HasAdvancedFilter
             'order_direction' => 'sometimes|required|in:asc,desc',
             'limit' => 'sometimes|required|integer|min:1',
             's' => 'sometimes|nullable|string',
-
+    
             // advanced filter
             'filter_match' => 'sometimes|required|in:and,or',
-            'f' => 'sometimes|required|array',
+            'f' => 'sometimes|nullable|array',
             'f.*.column' => 'required|in:' . $this->whiteListColumns(),
             'f.*.operator' => 'required_with:f.*.column|in:' . $this->allowedOperators(),
             'f.*.query_1' => 'required',
@@ -52,7 +53,7 @@ trait HasAdvancedFilter
         }
 
         $data['filter_match'] = 'or';
-
+        
         $data['f'] = array_map(function ($column) use ($data) {
             return [
                 'column' => $column,

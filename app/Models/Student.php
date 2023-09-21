@@ -35,6 +35,9 @@ class Student extends Model
         'status'
     ];
 
+    protected $filterable = [
+        'status'
+    ];
     /**
      * Get the comments for the blog post.
      */

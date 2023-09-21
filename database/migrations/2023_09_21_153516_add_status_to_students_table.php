@@ -14,7 +14,7 @@ class AddStatusToStudentsTable extends Migration
     public function up()
     {
         Schema::table('student', function (Blueprint $table) {
-            $table->enum('status', ['NEW', 'ONGOING', 'COMPLETED', 'PENDING REVIEW', 'ARCHIVED', 'SHORTLISTED', 'EXPIRED'])->default('NEW');
+            $table->enum('status', ['ONGOING', 'COMPLETED', 'PENDING REVIEW', 'ARCHIVED', 'SHORTLISTED', 'EXPIRED'])->default('ONGOING');
         });
     }
 
