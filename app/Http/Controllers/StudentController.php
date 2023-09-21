@@ -19,7 +19,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::with('companies', 'college')->get();
+        $students = Student::with('companies', 'college')->advancedFilter();
 
         $studentArr = array();
         foreach ($students as $student) {
@@ -27,10 +27,7 @@ class StudentController extends Controller
             $studentArr[] = $student;
         }
 
-        return response()->json([
-            'status' => true,
-            'student' => $studentArr
-        ]);
+        return response()->json($students);
     }
 
     private function processStudentCompleteSkills(Student $student): string
