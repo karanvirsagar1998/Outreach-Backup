@@ -15,7 +15,7 @@ class Company extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'student_id',
+        'user_id',
         'job_description',
         'link',
         'email',
@@ -31,10 +31,6 @@ class Company extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function student()
-    {
-        return $this->belongsTo(student::class);
-    }
 
     /**
      * Get the comments for the blog post.

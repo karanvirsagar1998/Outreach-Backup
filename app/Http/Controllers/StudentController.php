@@ -19,7 +19,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::with('companies', 'college')->advancedFilter();
+        $students = Student::with('college')->advancedFilter();
 
         return response()->json($students);
     }

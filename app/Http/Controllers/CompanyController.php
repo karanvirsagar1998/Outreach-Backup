@@ -17,7 +17,8 @@ class CompanyController extends Controller
     {
         return response()->json([
             'status' => true,
-            'company' => Company::with('user', 'student')->get()
+            'company' => Company::with('user')->get()
+            // 'company' => Company::with('user', 'student')->get()
         ]);
     }
 
