@@ -38,6 +38,35 @@ class Student extends Model
     protected $filterable = [
         'status'
     ];
+    
+    protected $casts = [
+        'skills' => 'json',
+    ];
+
+    protected $appends = [
+        'completeSkills'
+    ];
+
+    public function getCompleteSkillsAttribute() {
+        $skillsetArr = collect();
+        if ($this->attributes['skills']) {
+            $skillsetArr = collect($this->skills);
+        }
+
+        if (count($this->skillsets)) {
+            foreach ($this->skillsets as $skills) {
+                array_push($skillsetArr, $skills->skill->name);
+            }
+        }
+
+        if ($skillsetArr->count()) {
+            return $skillsetArr->join(", ");
+        } else {
+            return "";
+        }
+    }
+    
+
     /**
      * Get the comments for the blog post.
      */

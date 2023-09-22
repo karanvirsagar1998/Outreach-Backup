@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\User;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,10 +16,20 @@ class DatabaseSeeder extends Seeder
         DB::table('user_type')->insert(['name' => 'Company']);
         DB::table('user_type')->insert(['name' => 'Student']);
 
-        DB::table('users')->insert([
+        User::create([
             'email' => 'admin@outreach.ca',
             'password' => bcrypt('password'),
-            'user_type_id' => 1
+            'user_type_id' => 1,
+            'verified' => true,
+            'email_verified_at' => now()
+        ]);
+
+        User::create([
+            'email' => 'student@outreach.ca',
+            'password' => bcrypt('password'),
+            'user_type_id' => 2,
+            'verified' => true,
+            'email_verified_at' => now()
         ]);
 
         DB::table('skillset')->insert(['name' => 'Database']);
@@ -136,6 +147,7 @@ class DatabaseSeeder extends Seeder
         DB::table('college')->insert(['name' => "Collège Montmorency, Laval"]);
         DB::table('college')->insert(['name' => "Cégep de Victoriaville, Victoriaville"]);
         DB::table('college')->insert(['name' => "OTHER"]);
+
+        $this->call([StudentTableSeeder::class]);
     }
 }
-

@@ -21,34 +21,7 @@ class StudentController extends Controller
     {
         $students = Student::with('companies', 'college')->advancedFilter();
 
-        $studentArr = array();
-        foreach ($students as $student) {
-            $student->completeSkills = $this->processStudentCompleteSkills($student);
-            $studentArr[] = $student;
-        }
-
         return response()->json($students);
-    }
-
-    private function processStudentCompleteSkills(Student $student): string
-    {
-        $skillsetArr = array();
-        if ($student->skills) {
-            array_push($skillsetArr, $student->skills);
-        }
-
-        if (count($student->skillsets)) {
-            foreach ($student->skillsets as $skills) {
-                array_push($skillsetArr, $skills->skill->name);
-            }
-        }
-
-        if (count($skillsetArr)) {
-            return implode(", ", $skillsetArr);
-        } else {
-            return "";
-        }
-
     }
 
     /**
