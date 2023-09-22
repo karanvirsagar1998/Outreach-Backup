@@ -19,7 +19,7 @@ class StudentTableSeeder extends Seeder
 
         foreach (range(1, 100) as $index) {
             Student::create([
-                'user_id' => 2,
+                'user_id' => 3,
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
                 'contact_number' => $faker->phoneNumber,
@@ -35,6 +35,7 @@ class StudentTableSeeder extends Seeder
                 'video_link' => $faker->url,
                 'assessment_results_link' => $faker->url,
                 'status' => $faker->randomElement(['ONGOING', 'ARCHIVED', 'SHORTLISTED', 'EXPIRED']),
+                'company_id'=>1
             ]);
         }
     }

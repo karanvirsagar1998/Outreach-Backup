@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\User;
+use App\Models\Company;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,11 +26,30 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::create([
-            'email' => 'student@outreach.ca',
+            'email' => 'company@outreach.ca',
             'password' => bcrypt('password'),
             'user_type_id' => 2,
             'verified' => true,
             'email_verified_at' => now()
+        ]);
+
+
+        User::create([
+            'email' => 'student@outreach.ca',
+            'password' => bcrypt('password'),
+            'user_type_id' => 3,
+            'verified' => true,
+            'email_verified_at' => now()
+        ]);
+
+
+        Company::create([
+            'email' => 'company@outreach.ca',
+            'name' => 'Company 1', 
+            'job_description' => 'Looking for software developer for software development',
+            'user_id' => 2,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         DB::table('skillset')->insert(['name' => 'Database']);
