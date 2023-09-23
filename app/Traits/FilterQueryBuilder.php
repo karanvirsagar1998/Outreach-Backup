@@ -89,4 +89,8 @@ class FilterQueryBuilder
 
         return $query->where($filter['column'], 'like', '%' . $filter['query_1'] . '%', $filter['match']);
     }
+
+    public function jsonContains($filter, $query) {
+        return $query->whereJsonContains($filter['column'], $filter['query_1']);
+    }
 }

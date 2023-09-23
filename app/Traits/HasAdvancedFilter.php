@@ -27,7 +27,7 @@ trait HasAdvancedFilter
             'order_direction' => 'sometimes|required|in:asc,desc',
             'limit' => 'sometimes|required|integer|min:1',
             's' => 'sometimes|nullable|string',
-    
+
             // advanced filter
             'filter_match' => 'sometimes|required|in:and,or',
             'f' => 'sometimes|nullable|array',
@@ -53,7 +53,7 @@ trait HasAdvancedFilter
         }
 
         $data['filter_match'] = 'or';
-        
+
         $data['f'] = array_map(function ($column) use ($data) {
             return [
                 'column' => $column,
@@ -85,6 +85,7 @@ trait HasAdvancedFilter
     {
         return implode(',', [
             'contains',
+            'jsonContains'
         ]);
     }
 }

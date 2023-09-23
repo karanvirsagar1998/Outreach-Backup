@@ -19,7 +19,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Student::with('college')->advancedFilter();
+        $students = Student::with( 'college')->advancedFilter();
 
         return response()->json($students);
     }
@@ -105,15 +105,14 @@ class StudentController extends Controller
      * Display the specified resource.
      *
      * @param Student $student
-     * @return Response
+     * @return JsonResponse
      */
     public function show(Student $student)
     {
-        $student->load('companies', 'skillsets', 'skillsets.skill', 'college');
+        $student->load('skillsets', 'skillsets.skill', 'college');
 
         return response()->json([
             'status' => true,
-            'completeSkills' => $this->processStudentCompleteSkills($student),
             'student' => $student
         ], 200);
     }

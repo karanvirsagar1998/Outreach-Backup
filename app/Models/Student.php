@@ -36,9 +36,44 @@ class Student extends Model
     ];
 
     protected $filterable = [
+        'status',
+        'first_name',
+        'last_name',
+        'contact_number',
+        'email',
+        'link',
+        'about',
+        'skills',
+        'rank',
+        'availability',
+        'international',
+        'college_id',
+        'college_other',
+        'video_link',
+        'assessment_results_link',
         'status'
     ];
-    
+
+    protected $orderable = [
+        'id',
+        'status',
+        'first_name',
+        'last_name',
+        'contact_number',
+        'email',
+        'link',
+        'about',
+        'skills',
+        'rank',
+        'availability',
+        'international',
+        'college_id',
+        'college_other',
+        'video_link',
+        'assessment_results_link',
+        'status'
+    ];
+
     protected $casts = [
         'skills' => 'json',
     ];
@@ -65,7 +100,7 @@ class Student extends Model
             return "";
         }
     }
-    
+
 
     /**
      * Get the comments for the blog post.

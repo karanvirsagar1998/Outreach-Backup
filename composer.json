@@ -10,7 +10,7 @@
     "require": {
         "php": "^7.2.5|^8.0",
         "bacon/bacon-qr-code": "^2.0",
-        "doctrine/dbal": "2.0",
+        "doctrine/dbal": "2.*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3.1|^7.0.1",
@@ -18,7 +18,8 @@
         "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.5",
         "pragmarx/google2fa": "^8.0",
-        "simplesoftwareio/simple-qrcode": "^4.2"
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
