@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanySkillsetController;
@@ -10,7 +11,6 @@ use App\Http\Controllers\SkillsetController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentRankController;
 use App\Http\Controllers\StudentSkillsetController;
-use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +36,7 @@ Route::get('/clear', function () {
 
 });
 
-Route::post('/signup',  [AuthController::class, 'createUser']);
+Route::post('/signup', [AuthController::class, 'createUser']);
 Route::post('/signin', [AuthController::class, 'loginUser']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -63,6 +63,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('student/skillset/{student}', [StudentController::class, 'showSkillset']);
     Route::apiResource('candidates', CandidateController::class);
     Route::post('candidates/add-resume', [CandidateController::class, 'uploadResume']);
+    Route::post('candidates/shortlist/multiple', [CandidateController::class, 'updateStatusMultiple']);
 });
 
 Route::get('jobs', [JobsController::class, 'index']);
