@@ -13,21 +13,36 @@ class Candidate extends Model implements HasMedia
     use InteractsWithMedia;
     use HasAdvancedFilter;
 
-    protected $fillable = ['user_id', 'job_id', 'rank', 'status'];
+    protected $fillable = ['student_id', 'job_id', 'rank', 'status'];
     protected $appends = [
         'resume',
     ];
 
     protected $filterable = [
-        'status'
+        'status',
+        'student.first_name',
+        'student.email',
+        'student.skills',
+        'job.id'
     ];
     protected $orderable = [
-        'id'
+        'id',
+        'student.first_name',
+        'student.email',
+        'student.availability',
+        'student.international',
+        'job.name',
+        'rank'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class)->with('student');
+    }
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class)->with('college');
     }
 
     public function job()

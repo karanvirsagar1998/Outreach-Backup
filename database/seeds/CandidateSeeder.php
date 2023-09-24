@@ -17,9 +17,9 @@ class CandidateSeeder extends Seeder
     {
         $faker = Faker::create();
         $jobs = Jobs::get()->pluck('id');
-        foreach (range(1, 20) as $index) {
+        foreach (range(1, 25) as $index) {
             Candidate::create([
-                'user_id' => 3,
+                'student_id' => $faker->numberBetween(1,100),
                 'job_id' => $faker->randomElement($jobs),
                 'rank' => $faker->numberBetween(1, 10),
                 'status'=> $faker->randomElement(['NEW', 'ONGOING', 'COMPLETED', 'PENDING REVIEW', 'ARCHIVED', 'SHORTLISTED', 'EXPIRED']),

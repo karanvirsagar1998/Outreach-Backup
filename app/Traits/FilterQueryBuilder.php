@@ -34,7 +34,7 @@ class FilterQueryBuilder
             $callable = Str::camel($relation);
             $filter['match'] = 'and';
 
-            $query->orWhereHas(Str::camel($callable), function ($q) use ($filter) {
+            $query->whereHas(Str::camel($callable), function ($q) use ($filter) {
                 $this->{Str::camel($filter['operator'])}(
                     $filter,
                     $q

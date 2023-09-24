@@ -20,8 +20,18 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $candidates = Candidate::with('user')->advancedFilter();
+        $candidates = Candidate::with('student', 'job')->advancedFilter();
         return response()->json($candidates);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
+    public function show(Candidate $candidate)
+    {
+        return response()->json($candidate->load(['student', 'job']));
     }
 
     /**
@@ -32,10 +42,10 @@ class CandidateController extends Controller
      */
     public function store(Request $request)
     {
-        if (Gate::allows('check-if-candidate', [$request->user()])) {
+        if (Gate::allows('check-if-candidate')) {
             $candidate = Candidate::create(
                 collect($request->only('job_id'))->merge([
-                    'user_id' => auth()->id(),
+                    'student_id' => auth()->user()->student->id,
                     'status' => 'new',
                     'rank' => 0
                 ])->toArray()
