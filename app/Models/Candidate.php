@@ -2,13 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\User;
-use App\Models\Jobs;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Candidate extends Model
+class Candidate extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $fillable = ['user_id', 'job_id', 'rank', 'status'];
+    protected $appends = [
+        'resume',
+    ];
 
     public function user()
     {
@@ -18,5 +24,14 @@ class Candidate extends Model
     public function job()
     {
         return $this->belongsTo(Jobs::class);
+    }
+
+    public function getResumeAttribute()
+    {
+        return $this->getMedia('resume')->map(function ($item) {
+            $media = $item->toArray();
+            $media['url'] = $item->getUrl();
+            return $media;
+        })->last();
     }
 }

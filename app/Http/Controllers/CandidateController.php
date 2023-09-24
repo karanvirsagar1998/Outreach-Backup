@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidate;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Illuminate\Support\Facades\Gate;
 
 
@@ -14,7 +16,7 @@ class CandidateController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
@@ -25,17 +27,28 @@ class CandidateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
         if (Gate::allows('check-if-candidate', [$request->user()])) {
-            $candidate = Candidate::create($request->only('user_id', 'job_id', 'rank', 'status'));
+            $candidate = Candidate::create(
+                collect($request->only('job_id'))->merge([
+                    'user_id' => auth()->id(),
+                    'status' => 'new',
+                    'rank' => 0
+                ])->toArray()
+            );
+            if ($media = $request->input('resume')) {
+                Media::where('id', $media['id'])
+                    ->where('model_id', 0)
+                    ->update(['model_id' => $candidate->id]);
+            }
             return response()->json([
                 'status' => true,
                 'message' => "Candidate Added successfully!",
-                'candidate' => $candidate
+                'student' => $candidate
             ], 200);
         } else {
             return response()->json([
@@ -43,16 +56,16 @@ class CandidateController extends Controller
                 'message' => "Unauthorized",
             ], 403);
         }
- 
+
     }
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Candidate  $candidate
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param \App\Candidate $candidate
+     * @return Response
      */
     public function update(Request $request, Candidate $candidate)
     {
@@ -75,11 +88,28 @@ class CandidateController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Candidate  $candidate
-     * @return \Illuminate\Http\Response
+     * @param \App\Candidate $candidate
+     * @return Response
      */
     public function destroy(Candidate $candidate)
     {
         //
+    }
+
+
+    public function uploadResume(Request $request)
+    {
+        $this->validate($request, [
+            'file' => [
+                'max:' . 1024 * 2
+            ],
+        ]);
+
+        $model = new Candidate();
+        $model->id = $request->input('model_id', 0);
+        $model->exists = true;
+        $media = $model->addMediaFromRequest('file')->toMediaCollection('resume');
+
+        return response()->json($media, ResponseAlias::HTTP_CREATED);
     }
 }

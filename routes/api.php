@@ -62,6 +62,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('student/skillset/{student}', [StudentController::class, 'showSkillset']);
     Route::apiResource('candidates', CandidateController::class);
+    Route::post('candidates/add-resume', [CandidateController::class, 'uploadResume']);
 });
 
 Route::get('jobs', [JobsController::class, 'index']);
