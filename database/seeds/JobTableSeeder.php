@@ -17,7 +17,7 @@ class JobTableSeeder extends Seeder
             \App\Models\Jobs::create([
                 'user_id' => 2,
                 'name' => $faker->jobTitle,
-                'description' => $faker->randomHtml(10, 15),
+                'description' => $faker->randomHtml(4, 5),
             ]);
         }
     }
