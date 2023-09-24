@@ -6,6 +6,8 @@ use App\Models\Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
+
 
 class CandidateController extends Controller
 {
@@ -28,12 +30,20 @@ class CandidateController extends Controller
      */
     public function store(Request $request)
     {
-        $candidate = Candidate::create($request->only('user_id', 'job_id', 'rank', 'status'));
-        return response()->json([
-            'status' => true,
-            'message' => "Candidate Added successfully!",
-            'student' => $candidate
-        ], 200);
+        if (Gate::allows('check-if-candidate', [$request->user()])) {
+            $candidate = Candidate::create($request->only('user_id', 'job_id', 'rank', 'status'));
+            return response()->json([
+                'status' => true,
+                'message' => "Candidate Added successfully!",
+                'candidate' => $candidate
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => "Unauthorized",
+            ], 403);
+        }
+ 
     }
 
 
@@ -46,7 +56,20 @@ class CandidateController extends Controller
      */
     public function update(Request $request, Candidate $candidate)
     {
-        //
+        if (Gate::allows('update-candidate', [$request->user(), $candidate])) {
+            // Able to use job in $candidate because candidate model has candidate-jobs relation.
+            if($candidate->job->user_id == $request->user()->id){
+                $candidate->update($request->only('status'));
+                return response()->json([
+                    'status' => true,
+                    'message' => "Candidate Updated successfully!",
+                    'candidate' => $candidate
+                ], 200);
+            }
+        } else {
+            // The company is not authorized
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\User;
+use App\Models\Jobs;
 
 class Candidate extends Model
 {
@@ -15,6 +17,6 @@ class Candidate extends Model
 
     public function job()
     {
-        return $this->belongsTo(Job::class);
+        return $this->belongsTo(Jobs::class);
     }
 }

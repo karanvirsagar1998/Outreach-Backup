@@ -21,10 +21,19 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
+ 
     public function boot()
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('check-if-candidate', function ($user) {
+            return auth()->user()->user_type_id == 3;
+        });
+
+        Gate::define('update-candidate', function ($user, $candidate) {
+            return auth()->user();
+        });
     }
+
+  
 }
