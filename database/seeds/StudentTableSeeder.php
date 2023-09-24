@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Models\Skillset;
 use App\Models\Student;
+use App\User;
 use Faker\Factory as Faker;
 
 class StudentTableSeeder extends Seeder
@@ -18,8 +19,15 @@ class StudentTableSeeder extends Seeder
         $skills = Skillset::get()->pluck('name');
 
         foreach (range(1, 100) as $index) {
+            $user = User::create([
+                'email' => $faker->unique()->safeEmail,
+                'password' => bcrypt('password'),
+                'user_type_id' => 3,
+                'verified' => true,
+                'email_verified_at' => now()
+            ]);
             Student::create([
-                'user_id' => 3,
+                'user_id' => $user->id,
                 'first_name' => $faker->firstName,
                 'last_name' => $faker->lastName,
                 'contact_number' => $faker->phoneNumber,
@@ -35,7 +43,6 @@ class StudentTableSeeder extends Seeder
                 'video_link' => $faker->url,
                 'assessment_results_link' => $faker->url,
                 'status' => $faker->randomElement(['ONGOING', 'ARCHIVED', 'SHORTLISTED', 'EXPIRED']),
-                'company_id'=>1
             ]);
         }
     }
