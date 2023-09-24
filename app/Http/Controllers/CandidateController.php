@@ -21,16 +21,6 @@ class CandidateController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,30 +28,14 @@ class CandidateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $candidate = Candidate::create($request->only('user_id', 'job_id', 'rank', 'status'));
+        return response()->json([
+            'status' => true,
+            'message' => "Candidate Added successfully!",
+            'student' => $candidate
+        ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Candidate  $candidate
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Candidate $candidate)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Candidate  $candidate
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Candidate $candidate)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
