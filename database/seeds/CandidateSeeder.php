@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
+use App\Models\Jobs;
+use App\Models\Candidate;
+
 
 class CandidateSeeder extends Seeder
 {
@@ -11,6 +15,15 @@ class CandidateSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $faker = Faker::create();
+        $jobs = Jobs::get()->pluck('id');
+        foreach (range(1, 20) as $index) {
+            Candidate::create([
+                'user_id' => 3,
+                'job_id' => $faker->randomElement($jobs),
+                'rank' => $faker->numberBetween(1, 10),
+                'status'=> $faker->randomElement(['NEW', 'ONGOING', 'COMPLETED', 'PENDING REVIEW', 'ARCHIVED', 'SHORTLISTED', 'EXPIRED']),
+            ]);
+        }
     }
 }
