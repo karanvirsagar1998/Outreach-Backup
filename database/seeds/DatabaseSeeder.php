@@ -169,5 +169,8 @@ class DatabaseSeeder extends Seeder
         DB::table('college')->insert(['name' => "OTHER"]);
 
         $this->call([StudentTableSeeder::class]);
+        $this->call([JobTableSeeder::class]);
+        $this->call([CandidateSeeder::class]);
+        $this->call([InviteeSeeder::class]);
     }
 }

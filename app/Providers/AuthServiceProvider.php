@@ -30,7 +30,7 @@ class AuthServiceProvider extends ServiceProvider
             return auth()->user()->user_type_id == 3;
         });
 
-        Gate::define('update-candidate', function ($user, $candidate) {
+        Gate::define('check-authentication', function ($use) {
             return auth()->user();
         });
     }

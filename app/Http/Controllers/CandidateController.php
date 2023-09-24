@@ -79,7 +79,7 @@ class CandidateController extends Controller
      */
     public function update(Request $request, Candidate $candidate)
     {
-        if (Gate::allows('update-candidate', [$request->user(), $candidate])) {
+        if (Gate::allows('check-authentication', [$request->user()])) {
             // Able to use job in $candidate because candidate model has candidate-jobs relation.
             if($candidate->job->user_id == $request->user()->id){
                 $candidate->update($request->only('status'));
