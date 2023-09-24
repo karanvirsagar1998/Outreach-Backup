@@ -20,7 +20,7 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $candidates = Candidate::all();
+        $candidates = Candidate::with('user')->advancedFilter();
         return response()->json($candidates);
     }
 
