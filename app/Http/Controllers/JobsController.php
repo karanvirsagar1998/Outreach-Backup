@@ -2,44 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use App\Models\Jobs;
+use App\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class JobsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
         return response()->json([
             'status' => true,
-            'jobs' => Jobs::with('user')->get()
+            'jobs' => Jobs::with('user')->latest()->get()
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
-        $jobs = Jobs::create($request->all());
+        $jobs = Jobs::create(
+            collect($request->all())->merge([
+                'user_id' => auth()->id()
+            ])->toArray()
+        );
 
         return response()->json([
             'status' => true,
@@ -49,10 +45,20 @@ class JobsController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
      * Display the specified resource.
      *
-     * @param  \App\Jobs  $jobs
-     * @return \Illuminate\Http\Response
+     * @param \App\Jobs $jobs
+     * @return JsonResponse
      */
     public function show(Jobs $jobs)
     {
@@ -66,8 +72,8 @@ class JobsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return JsonResponse
      */
     public function showByUser(User $user)
     {
@@ -83,8 +89,8 @@ class JobsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Jobs  $jobs
-     * @return \Illuminate\Http\Response
+     * @param \App\Jobs $jobs
+     * @return Response
      */
     public function edit(Jobs $jobs)
     {
@@ -94,9 +100,9 @@ class JobsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Jobs  $jobs
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param \App\Jobs $jobs
+     * @return JsonResponse
      */
     public function update(Request $request, Jobs $jobs)
     {
@@ -112,8 +118,8 @@ class JobsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Jobs  $jobs
-     * @return \Illuminate\Http\Response
+     * @param \App\Jobs $jobs
+     * @return JsonResponse
      */
     public function destroy(Jobs $jobs)
     {
