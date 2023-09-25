@@ -17,7 +17,7 @@ class AlterColumnsNameInCandidateTable extends Migration
             //
             $table->dropForeign(['user_id']);
             $table->dropColumn('user_id');
-            $table->unsignedInteger('student_id');
+            $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->references('id')->on('student')->onDelete('cascade');
         });
     }
