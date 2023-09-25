@@ -17,7 +17,7 @@ class CreateInviteesTable extends Migration
             $table->id();
             $table->bigInteger('job_id')->unsigned();
             $table->bigInteger('test_id')->unsigned()->nullable();
-            $table->string('email', 50)->unique();
+            $table->string('email', 50);
             $table->timestamps();
             $table->datetime('link_activation_time');
             $table->datetime('link_expiry_time');
