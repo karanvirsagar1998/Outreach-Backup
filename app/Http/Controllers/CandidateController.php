@@ -123,10 +123,21 @@ class CandidateController extends Controller
         return response()->json($media, ResponseAlias::HTTP_CREATED);
     }
 
-    public function updateStatusMultiple(Request $request) {
+    public function updateStatusShortlistMultiple(Request $request) {
         $ids = $request->get('ids');
         Candidate::whereIn('id', $ids)->update([
             'status' => 'shortlisted'
+        ]);
+        return response()->json([
+            'status' => 200,
+            'message' => 'Candidate updated successfully'
+        ]);
+    }
+
+    public function updateStatusShortlistRemoveMultiple(Request $request) {
+        $ids = $request->get('ids');
+        Candidate::whereIn('id', $ids)->update([
+            'status' => 'new'
         ]);
         return response()->json([
             'status' => 200,

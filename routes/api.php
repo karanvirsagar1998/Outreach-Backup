@@ -64,7 +64,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('student/skillset/{student}', [StudentController::class, 'showSkillset']);
     Route::apiResource('candidates', CandidateController::class);
     Route::post('candidates/add-resume', [CandidateController::class, 'uploadResume']);
-    Route::post('candidates/shortlist/multiple', [CandidateController::class, 'updateStatusMultiple']);
+    Route::post('candidates/shortlist/multiple', [CandidateController::class, 'updateStatusShortlistMultiple']);
+    Route::post('candidates/remove-shortlist/multiple', [CandidateController::class, 'updateStatusShortlistRemoveMultiple']);
     Route::apiResource('invitee', InviteeController::class);
 });
 
